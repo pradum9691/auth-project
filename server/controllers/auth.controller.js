@@ -11,7 +11,7 @@ export const registerController = async (req, res) => {
       return res.status(400).json({ message: "All fields required" });
 
     const hashPass = await bcrypt.hash(password, 10);
-
+ 
     const newUser = await UserModel.create({
       name,
       email,

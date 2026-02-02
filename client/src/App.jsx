@@ -5,14 +5,31 @@ import Verify from "./pages/Verify";
 import Profile from "./pages/Profile";
 
 const PrivateRoute = ({ children }) => {
-  return localStorage.getItem("token") ? children : <Navigate to="/login" />;
+  return localStorage.getItem("token") ? children : <Navigate to="/" />;
+};
+const PublicRoute = ({ children }) => {
+  return localStorage.getItem("token") ? <Navigate to="/profile" /> : children;
 };
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/register" element={<Register />} />
-      <Route path="/" element={<Login />} />
+      <Route
+        path="/"
+        element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <PublicRoute>
+            <Register />
+          </PublicRoute>
+        }
+      />
       <Route path="/verify/:token" element={<Verify />} />
       <Route
         path="/profile"
@@ -20,6 +37,16 @@ export default function App() {
           <PrivateRoute>
             <Profile />
           </PrivateRoute>
+        }
+      />
+      <Route
+        path="*"
+        element={
+          localStorage.getItem("token") ? (
+            <Navigate to="/profile" />
+          ) : (
+            <Navigate to="/" />
+          )
         }
       />
     </Routes>
